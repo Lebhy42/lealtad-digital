@@ -1,0 +1,1388 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4A1D6B">
+<meta name="robots" content="noindex">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Jireh shop">
+<title>Demo · Tarjeta de lealtad</title>
+<meta name="robots" content="noindex">
+<!-- Vista previa al compartir en WhatsApp/Facebook: la imagen y textos que salen en la tarjetita del enlace -->
+<meta name="description" content="Tu tarjeta de lealtad de Jireh shop: junta sellos con cada compra y gana $120 de descuento.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_MX">
+<meta property="og:title" content="Demo: tarjeta de lealtad digital">
+<meta property="og:description" content="Prueba la tarjeta de lealtad, el catálogo y los apartados tal como los usa Jireh shop.">
+<meta property="og:site_name" content="Jireh shop">
+<meta property="og:image" content="https://jirehshop.jireh.workers.dev/og/og-tarjeta.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Tarjeta de lealtad de Jireh shop con sellos">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 40'%3E%3Cpath d='M3 34C14 12 34 2 52 8c6 2 9 7 9 12s-3 10-9 12C34 38 14 28 3 6' fill='none' stroke='%234A1D6B' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Las fuentes no bloquean la página: si la red del celular es lenta, se ve con letra del sistema y luego cambia -->
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500&family=Dancing+Script:wght@600&family=Jost:wght@400;500;600&display=swap">
+<style>
+/* Layout: una sola columna tipo app de celular; la tarjeta es el objeto principal, todo lo demás va debajo */
+:root {
+  --paper: #FDF9FC; --surface: #FFFFFF; --ink: #22152C; --muted: #6D5A78;
+  --plum: #4A1D6B; --plum-2: #6E30A1; --rose: #E07FCB; --magenta: #B03A93;
+  --blush: #F3D4EC; --line: #E9D9E6; --autumn: #D98A4B;
+  --ok: #2E7D4F; --warn: #B4531F;
+  --f-display: "Bodoni Moda", Georgia, "Times New Roman", serif;
+  --f-body: "Jost", "Helvetica Neue", Arial, sans-serif;
+  --f-script: "Dancing Script", "Brush Script MT", cursive;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #170E1E; --surface: #22152C; --ink: #F6ECF4; --muted: #BBA6C6;
+  --plum: #C9A2EA; --plum-2: #DDBDF5; --rose: #E992D6; --magenta: #E77CC9;
+  --blush: #3A2347; --line: #3A2A45; --autumn: #E9A46B; --ok: #6FCB95; --warn: #F0A06E;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #170E1E; --surface: #22152C; --ink: #F6ECF4; --muted: #BBA6C6;
+  --plum: #C9A2EA; --plum-2: #DDBDF5; --rose: #E992D6; --magenta: #E77CC9;
+  --blush: #3A2347; --line: #3A2A45; --autumn: #E9A46B; --ok: #6FCB95; --warn: #F0A06E;
+  color-scheme: dark }
+
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.5; -webkit-tap-highlight-color: transparent; }
+.wrap { max-width: 440px; margin: 0 auto; padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 20px; }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.stack.lg { gap: 20px; }
+.stack.sm { gap: 6px; }
+h1, h2 { font-family: var(--f-display); font-weight: 500; text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: 30px; } h2 { font-size: 22px; }
+p { margin: 0; }
+.eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--magenta); font-weight: 600; }
+.script { font-family: var(--f-script); font-weight: 600; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+
+/* barra de demo */
+.demo { background: var(--blush); border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.tabs button { flex: 1 1 auto; font: 500 14px var(--f-body); padding: 8px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.tabs button[aria-pressed="true"] { background: var(--plum); border-color: var(--plum); color: var(--paper); }
+
+/* marca */
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand svg { width: 44px; height: 30px; flex: none; color: var(--plum); }
+.tam { margin-left: auto; font: 600 15px var(--f-body); padding: 8px 12px; border-radius: 999px; border: 1.5px solid var(--plum); background: var(--surface); color: var(--plum); cursor: pointer; white-space: nowrap; }
+.tam span { font-weight: 500; font-size: 13px; }
+.brand .name { white-space: nowrap; font-family: var(--f-script); font-weight: 600; font-size: 30px; line-height: 1; color: var(--ink); }
+
+/* formulario */
+form { display: flex; flex-direction: column; gap: 14px; }
+label { display: flex; flex-direction: column; gap: 6px; font-weight: 500; font-size: 15px; }
+input, select, textarea { font: 400 17px var(--f-body); padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); width: 100%; box-sizing: border-box; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--rose); outline-offset: 2px; }
+.btn { font: 600 16px var(--f-body); padding: 14px 18px; border-radius: 14px; border: none; background: var(--plum); color: var(--paper); cursor: pointer; text-align: center; touch-action: manipulation; }
+@media (hover: hover) { .btn:hover:not([disabled]) { background: var(--plum-2); } }
+a.btn { display: block; text-decoration: none; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--plum); border: 1.5px solid var(--plum); }
+.btn.rose { background: var(--magenta); }
+.link { all: unset; cursor: pointer; color: var(--muted); font-size: 14px; text-decoration: underline; text-underline-offset: 3px; align-self: center; }
+.row, form.row { display: flex; flex-direction: row; gap: 10px; flex-wrap: wrap; }
+.row > * { flex: 1 1 140px; }
+.note { font-size: 14px; color: var(--muted); }
+.err { color: var(--warn); font-size: 14px; font-weight: 500; }
+
+/* reglas */
+.rules { display: grid; grid-template-columns: auto 1fr; gap: 10px 12px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+.rules .ico { width: 28px; height: 28px; border-radius: 50%; background: var(--blush); display: grid; place-items: center; color: var(--plum); }
+.rules .ico svg { width: 16px; height: 12px; }
+
+/* la tarjeta (siempre morada, en los dos temas, como un pase de wallet) */
+.pass { position: relative; overflow: hidden; border-radius: 22px; color: #FDF9FC; padding: 20px 20px 18px;
+  background:
+    radial-gradient(120% 90% at 105% -10%, rgba(224,128,208,.85) 0, rgba(224,128,208,.25) 38%, transparent 60%),
+    radial-gradient(70% 60% at -10% 110%, rgba(176,58,147,.6) 0, transparent 60%),
+    linear-gradient(160deg, #5B2585 0%, #3D1659 100%);
+  box-shadow: 0 18px 40px -18px rgba(74,29,107,.7); display: flex; flex-direction: column; gap: 16px; }
+.pass .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.pass .logo { font-family: var(--f-script); font-weight: 600; font-size: 30px; line-height: 1; }
+.pass .kind { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; opacity: .85; text-align: right; }
+.pass .who { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+.pass .lbl { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; opacity: .75; }
+.pass .val { font-family: var(--f-display); font-size: 22px; line-height: 1.2; overflow-wrap: anywhere; }
+.pass .count { font-family: var(--f-display); font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; text-align: right; }
+.pass .count small { font-size: 16px; opacity: .75; }
+.stamps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.stamp { aspect-ratio: 1; max-width: 100%; border-radius: 50%; border: 1.5px dashed rgba(253,249,252,.5); display: grid; place-items: center; position: relative; }
+.stamp span { font-size: 12px; opacity: .55; font-variant-numeric: tabular-nums; }
+.stamp.on { border: none; background: #FDF9FC; color: #6E30A1; box-shadow: inset 0 0 0 3px #E080D0; }
+.stamp.on svg { width: 62%; height: auto; transform: rotate(-12deg); }
+.stamp.gift { border-style: solid; border-color: #E080D0; }
+.stamp.gift svg { width: 46%; height: auto; opacity: .9; }
+.stamp.on.gift { background: #E080D0; color: #3D1659; box-shadow: none; }
+.stamp.pop { animation: pop .5s ease-out; }
+@keyframes pop { 0% { transform: scale(.4); } 70% { transform: scale(1.12); } 100% { transform: scale(1); } }
+.pass .foot { font-size: 14px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; opacity: .95; }
+
+.qrbox { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: flex; gap: 16px; align-items: center; }
+.qr { background: #fff; padding: 8px; border-radius: 10px; flex: none; line-height: 0; }
+.qr img, .qr canvas { width: 116px; height: 116px; }
+.code { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 20px; letter-spacing: .08em; color: var(--plum); font-weight: 600; }
+.banner { border-radius: 14px; padding: 14px 16px; background: var(--blush); color: var(--ink); font-weight: 500; }
+.banner.ready { background: var(--magenta); color: var(--paper); }
+
+/* tienda */
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+#reader { width: 100%; border-radius: 12px; overflow: hidden; }
+.client-head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.client-head .val { font-family: var(--f-display); font-size: 22px; overflow-wrap: anywhere; }
+.mini { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; max-width: 260px; }
+.mini i { aspect-ratio: 1; border-radius: 50%; border: 1.5px dashed var(--line); }
+.mini i.on { background: var(--magenta); border-color: var(--magenta); }
+.list { display: flex; flex-direction: column; }
+.list button { all: unset; cursor: pointer; display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 10px 4px; border-bottom: 1px solid var(--line); }
+.list button:focus-visible { outline: 3px solid var(--rose); }
+.list .n { font-weight: 500; min-width: 0; overflow-wrap: anywhere; }
+.list .s { font-variant-numeric: tabular-nums; color: var(--plum); font-weight: 600; text-align: right; }
+.list .t { font-size: 13px; color: var(--muted); grid-column: 1 / -1; }
+.pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--magenta); color: var(--paper); }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--paper); padding: 12px 18px; border-radius: 999px; font-weight: 500; z-index: 20; max-width: calc(100% - 32px); box-sizing: border-box; text-align: center; overflow-wrap: anywhere; }
+
+/* cartel */
+.poster { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; }
+.poster .qr img, .poster .qr canvas { width: 220px; height: 220px; }
+.poster h1 { font-size: 32px; }
+.poster .script { font-size: 26px; color: var(--magenta); }
+.url { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+
+
+/* catálogo: cuadrícula de prendas; en computadora la columna se ensancha */
+.wrap.ancho { max-width: 960px; }
+.cat-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chips button { flex: none; font: 500 14px var(--f-body); padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--plum); border-color: var(--plum); color: var(--paper); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px 14px; }
+.prod { all: unset; cursor: pointer; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.prod:focus-visible { outline: 3px solid var(--rose); outline-offset: 3px; border-radius: 14px; }
+.ph { position: relative; display: block; aspect-ratio: 3 / 4; border-radius: 14px; overflow: hidden; background: var(--blush); }
+.ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.prod .n { font-weight: 500; font-size: 15px; line-height: 1.3; overflow-wrap: anywhere; margin-top: 4px; }
+.prod.off .ph img { opacity: .5; }
+.price { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--plum); }
+.price s { color: var(--muted); font-weight: 400; margin-left: 6px; font-size: .88em; }
+.badge { position: absolute; top: 8px; left: 8px; font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--ink); color: var(--paper); }
+.badge.sale { background: var(--magenta); color: #fff; }
+.admin { background: var(--blush); border-color: transparent; }
+.admin .row { align-items: center; }
+
+dialog.sheet { width: min(560px, 100%); max-width: 100%; max-height: 94dvh; margin: auto auto 0; border: none; border-radius: 22px 22px 0 0; padding: 0; background: var(--surface); color: var(--ink); box-sizing: border-box; }
+dialog.sheet::backdrop { background: rgba(20, 10, 30, .55); }
+@media (min-width: 600px) { dialog.sheet { margin: auto; border-radius: 22px; } }
+.sheet-body { padding: 16px 16px calc(20px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 14px; }
+.sheet-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.x { all: unset; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 26px; line-height: 1; color: var(--ink); background: var(--paper); flex: none; }
+.x:focus-visible { outline: 3px solid var(--rose); }
+.carr { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; border-radius: 16px; background: var(--blush); scrollbar-width: none; }
+.carr::-webkit-scrollbar { display: none; }
+.carr > * { flex: 0 0 100%; scroll-snap-align: center; aspect-ratio: 3 / 4; max-height: 62dvh; object-fit: cover; display: block; }
+.carr-n { font-size: 13px; color: var(--muted); text-align: center; }
+.tallas { display: flex; gap: 8px; flex-wrap: wrap; }
+.tallas button { font: 500 15px var(--f-body); min-width: 48px; padding: 9px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.tallas button[aria-pressed="true"] { border-color: var(--plum); background: var(--plum); color: var(--paper); }
+.btn.wa { background: #1F8A4C; color: #fff; }
+@media (hover: hover) { .btn.wa:hover { background: #18703D; } }
+.fotos-ed { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.fe { position: relative; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden; background: var(--blush); }
+.fe img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.fe.cargando img { opacity: .45; }
+.fe-st { position: absolute; inset: auto 0 8px; text-align: center; font-size: 12px; font-weight: 600; }
+.fe-x { all: unset; cursor: pointer; position: absolute; top: 6px; right: 6px; width: 28px; height: 28px; border-radius: 50%; background: rgba(20,10,30,.7); color: #fff; display: grid; place-items: center; font-size: 18px; }
+.fe-1 { all: unset; cursor: pointer; position: absolute; left: 6px; bottom: 6px; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,.88); color: #22152C; }
+.fe.add { display: grid; place-items: center; border: 1.5px dashed var(--plum); background: transparent; color: var(--plum); font-weight: 600; cursor: pointer; text-align: center; }
+textarea { resize: vertical; min-height: 72px; }
+.btn.sm { font-size: 14px; padding: 8px 12px; border-radius: 12px; }
+.ap-box { border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 12px; }
+.ap { border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.ap .t { font-weight: 500; overflow-wrap: anywhere; }
+.ap .nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 13px; color: var(--muted); }
+.ap .nums b { display: block; font-size: 16px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.ap .nums .saldo b { color: var(--plum); }
+.ap .row > * { flex: 1 1 100px; }
+.ap.vencido { border-color: var(--warn); }
+.tag { font-size: 12px; font-weight: 600; color: var(--warn); }
+.tag.ok { color: var(--ok); }
+.bar { height: 6px; border-radius: 99px; background: var(--blush); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--magenta); }
+
+@media (prefers-reduced-motion: reduce) { .stamp.pop { animation: none; } }
+
+/* impresión del cartel: solo la marca y el cartel, siempre en colores claros */
+@media print {
+  :root, :root:not([data-theme="light"]), :root[data-theme="dark"] {
+    --paper: #fff; --surface: #fff; --ink: #22152C; --muted: #6D5A78; --plum: #4A1D6B; --magenta: #B03A93; --line: #E9D9E6; color-scheme: light; }
+  .wrap > :not(.brand):not(#v-cartel), #v-cartel > :not(.poster), .toast, .tam { display: none !important; }
+  body { zoom: 1 !important; }
+  .wrap { max-width: none; padding: 0; }
+  .poster { border: none; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="fish" viewBox="0 0 64 40"><path d="M3 34C14 12 34 2 52 8c6 2 9 7 9 12s-3 10-9 12C34 38 14 28 3 6" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="49" cy="17" r="2.6" fill="currentColor"/></symbol>
+  <symbol id="gift" viewBox="0 0 24 24"><path d="M4 11h16v10H4zM2 7h20v4H2zM12 7v14M12 7S10 2 7 3.5 9 7 12 7zm0 0s2-5 5-3.5S15 7 12 7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="wrap" id="app">
+  <div class="demo" id="demoBar" hidden>
+    <span><strong>Demo para probar.</strong> Así lo usa Jireh shop. Lo que hagas aquí se guarda solo en tu celular. PIN de la tienda: <strong>2603</strong>. <a href="../">← Volver</a></span>
+    <div class="tabs" role="group" aria-label="Vista">
+      <button type="button" data-view="clienta" aria-pressed="true">Clienta</button>
+      <button type="button" data-view="tienda" aria-pressed="false">Tienda</button>
+      <button type="button" data-view="catalogo" aria-pressed="false">Catálogo</button>
+      <button type="button" data-view="cartel" aria-pressed="false">Cartel QR</button>
+    </div>
+  </div>
+
+  <header class="brand">
+    <svg viewBox="0 0 64 40" aria-hidden="true"><use href="#fish"/></svg>
+    <span class="name">Jireh shop</span>
+    <button type="button" class="tam" id="tam" aria-label="Tamaño del texto">Aa <span id="tam-n">Normal</span></button>
+  </header>
+
+  <!-- ======== CLIENTA ======== -->
+  <section id="v-clienta" class="stack lg">
+    <div id="c-loading" class="note">Cargando tu tarjeta…</div>
+
+    <div id="c-registro" class="stack lg" hidden>
+      <div class="stack" style="gap:8px">
+        <span class="eyebrow">Tarjeta de lealtad</span>
+        <h1>Junta sellos con cada compra y llévate un premio</h1>
+      </div>
+      <div class="rules" id="rules"></div>
+      <form id="f-registro" autocomplete="on" novalidate>
+        <label for="r-nombre">Tu nombre
+          <input id="r-nombre" name="nombre" required maxlength="40" placeholder="Ej. Rosa Martínez" autocomplete="name" autocapitalize="words">
+        </label>
+        <label for="r-tel">Tu WhatsApp (10 dígitos)
+          <input id="r-tel" name="tel" type="tel" required inputmode="numeric" maxlength="16" placeholder="55 1234 5678" autocomplete="tel-national">
+        </label>
+        <p class="err" id="r-err" role="alert" hidden></p>
+        <button class="btn" type="submit" id="r-btn">Crear mi tarjeta</button>
+        <p class="note">Si ya tenías tarjeta, escribe el mismo número y la recuperas con tus sellos.</p>
+      </form>
+      <a class="btn ghost" href="#catalogo">Ver el catálogo</a>
+    </div>
+
+    <div id="c-tarjeta" class="stack" hidden>
+      <div class="pass" id="pass">
+        <div class="top"><span class="logo">Jireh shop</span><span class="kind">Tarjeta<br>de lealtad</span></div>
+        <div class="stamps" id="stamps" role="img"></div>
+        <div class="who">
+          <div><div class="lbl">Clienta</div><div class="val" id="t-nombre"></div></div>
+          <div><div class="lbl" style="text-align:right">Sellos</div><div class="count" id="t-count"></div></div>
+        </div>
+        <div class="foot"><span id="t-premio"></span><span id="t-premios"></span></div>
+      </div>
+      <div class="banner" id="t-banner" aria-live="polite"></div>
+      <div class="qrbox">
+        <div class="qr" id="t-qr" role="img" aria-label="Código QR de tu tarjeta"></div>
+        <div class="stack sm" style="min-width:0">
+          <span class="eyebrow">Muéstralo en caja</span>
+          <span class="code" id="t-code"></span>
+          <span class="note">Con este código te ponemos tu sello cada vez que compras.</span>
+        </div>
+      </div>
+      <a class="btn ghost" href="#catalogo">Ver el catálogo</a>
+      <div class="panel" id="t-aps" hidden>
+        <strong>Tus apartados</strong>
+        <div class="stack sm" id="t-aps-list"></div>
+      </div>
+      <div class="panel">
+        <strong>Guarda tu tarjeta</strong>
+        <p class="small muted">Agrega esta página a la pantalla de inicio de tu celular (menú del navegador, “Agregar a inicio”) o guarda tu enlace personal:</p>
+        <div class="row"><button class="btn ghost" type="button" id="t-copy">Copiar mi enlace</button><button class="btn ghost" type="button" id="t-refresh">Actualizar sellos</button></div>
+      </div>
+      <button class="link" type="button" id="t-otra">¿No es tu tarjeta? Usar otro número</button>
+    </div>
+  </section>
+
+  <!-- ======== TIENDA ======== -->
+  <section id="v-tienda" class="stack" hidden>
+    <div class="stack sm">
+      <span class="eyebrow">Solo para la tienda</span>
+      <h1>Poner sellos</h1>
+    </div>
+
+    <form id="f-pin" class="panel">
+      <label for="pin">PIN de la tienda
+        <input id="pin" type="password" inputmode="numeric" required maxlength="12" autocomplete="off">
+      </label>
+      <p class="err" id="pin-err" role="alert" hidden></p>
+      <button class="btn" type="submit" id="pin-btn">Entrar</button>
+      <p class="note" id="pin-hint" hidden>En la demostración el PIN es <strong>2603</strong>.</p>
+    </form>
+
+    <div id="s-main" class="stack" hidden>
+      <div class="panel">
+        <button class="btn" type="button" id="s-scan">Escanear tarjeta con la cámara</button>
+        <div id="reader" hidden></div>
+        <p class="note" id="s-scan-note" hidden></p>
+        <form id="f-buscar" class="row" style="align-items:flex-end">
+          <label for="s-q" style="flex:2 1 180px">O escribe el código o el teléfono
+            <input id="s-q" required placeholder="JR-7K3Q o 5512345678" autocomplete="off" autocapitalize="characters">
+          </label>
+          <button class="btn ghost" type="submit" id="s-buscar" style="flex:1 1 90px">Buscar</button>
+        </form>
+        <p class="err" id="s-err" role="alert" hidden></p>
+      </div>
+
+      <div class="panel" id="s-client" hidden>
+        <div class="client-head">
+          <span class="val" id="s-nombre"></span>
+          <span class="code" id="s-code" style="font-size:15px"></span>
+        </div>
+        <span class="note" id="s-tel"></span>
+        <div class="mini" id="s-mini" aria-hidden="true"></div>
+        <p id="s-status" style="font-weight:500"></p>
+        <button class="btn" type="button" id="s-add">+1 sello</button>
+        <p class="note" id="s-regla"></p>
+        <div class="row">
+          <button class="btn rose" type="button" id="s-redeem">Entregar premio</button>
+          <button class="btn ghost" type="button" id="s-undo">Quitar un sello</button>
+        </div>
+        <div class="ap-box">
+          <div class="client-head"><strong>Apartados</strong><button class="btn ghost sm" type="button" id="s-ap-nuevo">+ Nuevo apartado</button></div>
+          <div class="stack" id="s-aps"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="client-head"><h2>Apartados pendientes</h2><span class="note" id="s-ap-total"></span></div>
+        <div class="list" id="s-ap-list"></div>
+      </div>
+
+      <div class="panel">
+        <div class="client-head"><h2>Catálogo</h2></div>
+        <p class="note">Sube fotos de tus prendas con precio y tallas. Tus clientas las ven en la página y te las piden por WhatsApp.</p>
+        <a class="btn ghost" href="#catalogo">Agregar o editar productos</a>
+      </div>
+
+      <div class="panel">
+        <div class="client-head"><h2>Clientas</h2><span class="note" id="s-total"></span></div>
+        <input id="s-filter" type="search" placeholder="Buscar por nombre, código o teléfono" aria-label="Buscar clienta" autocomplete="off">
+        <div class="list" id="s-list"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ======== CATÁLOGO ======== -->
+  <section id="v-catalogo" class="stack lg" hidden>
+    <div class="cat-head">
+      <div class="stack sm"><span class="eyebrow">Catálogo</span><h1>Lo que tenemos en tienda</h1></div>
+      <button class="link" type="button" id="k-tarjeta">Ver mi tarjeta</button>
+    </div>
+    <div class="panel admin" id="k-admin" hidden>
+      <div class="row">
+        <div class="stack sm" style="flex:2 1 200px"><strong>Modo dueña</strong><span class="note">Toca una prenda para editarla, marcarla agotada u ocultarla.</span></div>
+        <button class="btn" type="button" id="k-nuevo">+ Agregar producto</button>
+      </div>
+      <button class="btn ghost" type="button" id="k-share-cat">Compartir el catálogo por WhatsApp</button>
+    </div>
+    <div class="chips" id="k-cats" role="group" aria-label="Categorías" hidden></div>
+    <div class="grid" id="k-grid"></div>
+    <p class="note" id="k-estado" aria-live="polite"></p>
+    <form id="k-pin" class="panel" hidden style="max-width:400px">
+      <label for="k-pin-in">PIN de la tienda
+        <input id="k-pin-in" type="password" inputmode="numeric" required maxlength="12" autocomplete="off">
+      </label>
+      <p class="err" id="k-pin-err" role="alert" hidden></p>
+      <button class="btn" type="submit" id="k-pin-btn">Entrar como dueña</button>
+    </form>
+    <button class="link" type="button" id="k-duena">Soy la dueña: agregar productos</button>
+    <button class="link" type="button" id="k-salir" hidden>Salir del modo dueña</button>
+  </section>
+
+  <!-- ======== CARTEL ======== -->
+  <section id="v-cartel" class="stack" hidden>
+    <div class="poster">
+      <span class="script">¿Ya tienes tu tarjeta?</span>
+      <h1>Escanea y junta sellos con cada compra</h1>
+      <div class="qr" id="p-qr" role="img" aria-label="Código QR de la página de tarjetas"></div>
+      <p id="p-regla" style="font-weight:500"></p>
+      <p class="muted small">Pide tu sello en caja. Sin apps, sin papelitos.</p>
+      <p class="url" id="p-url"></p>
+    </div>
+    <button class="btn ghost" type="button" id="p-print">Imprimir cartel</button>
+    <p class="note">Imprime este cartel o haz captura de pantalla y ponlo junto a la caja. El QR abre la página donde a cada clienta se le genera su tarjeta.</p>
+  </section>
+</div>
+
+<!-- detalle de una prenda -->
+<dialog class="sheet" id="d-prod" aria-labelledby="d-nombre">
+  <div class="sheet-body">
+    <div class="sheet-top"><span class="eyebrow" id="d-cat"></span><button class="x" type="button" data-cerrar aria-label="Cerrar">×</button></div>
+    <div class="carr" id="d-carr"></div>
+    <p class="carr-n" id="d-carr-n" hidden></p>
+    <div class="stack sm">
+      <h2 id="d-nombre"></h2>
+      <span class="price" id="d-precio" style="font-size:20px"></span>
+    </div>
+    <p id="d-desc" class="muted"></p>
+    <div class="stack sm" id="d-tallas-box">
+      <strong class="small">Talla</strong>
+      <div class="tallas" id="d-tallas" role="group" aria-label="Elige tu talla"></div>
+    </div>
+    <p class="banner" id="d-agotado" hidden>Por ahora está agotado. Pregúntanos si vuelve a llegar.</p>
+    <a class="btn wa" id="d-wa" target="_blank" rel="noopener">Lo quiero, pedir por WhatsApp</a>
+    <button class="btn ghost" type="button" id="d-share">Compartir</button>
+    <button class="btn ghost" type="button" id="d-editar" hidden>Editar este producto</button>
+  </div>
+</dialog>
+
+<!-- agregar / editar prenda (solo dueña) -->
+<dialog class="sheet" id="d-edit" aria-labelledby="e-titulo">
+  <form class="sheet-body" id="f-edit" novalidate>
+    <div class="sheet-top"><h2 id="e-titulo">Agregar producto</h2><button class="x" type="button" data-cerrar aria-label="Cerrar">×</button></div>
+    <div class="stack sm">
+      <strong class="small">Fotos (hasta 6, la primera es la portada)</strong>
+      <div class="fotos-ed" id="e-fotos"></div>
+    </div>
+    <label for="e-nombre">Nombre de la prenda
+      <input id="e-nombre" required maxlength="60" placeholder="Ej. Vestido midi camello" autocapitalize="sentences">
+    </label>
+    <label for="e-cat">Categoría
+      <input id="e-cat" list="e-cats" maxlength="30" placeholder="Vestidos, Blusas…" autocapitalize="sentences">
+      <datalist id="e-cats"></datalist>
+    </label>
+    <div class="row" style="align-items:flex-end">
+      <label for="e-precio">Precio
+        <input id="e-precio" type="number" inputmode="numeric" min="1" step="1" required placeholder="450">
+      </label>
+      <label for="e-oferta">Precio de oferta (opcional)
+        <input id="e-oferta" type="number" inputmode="numeric" min="1" step="1" placeholder="360">
+      </label>
+    </div>
+    <div class="stack sm">
+      <strong class="small">Tallas disponibles</strong>
+      <div class="tallas" id="e-tallas" role="group" aria-label="Tallas"></div>
+      <div class="row" style="align-items:flex-end">
+        <label for="e-talla-otra" style="flex:2 1 140px">Otra talla
+          <input id="e-talla-otra" maxlength="12" placeholder="Ej. 28 o 5">
+        </label>
+        <button class="btn ghost" type="button" id="e-talla-add" style="flex:1 1 90px">Agregar</button>
+      </div>
+    </div>
+    <label for="e-desc">Descripción (opcional)
+      <textarea id="e-desc" maxlength="300" rows="3" placeholder="Tela, color, largo…"></textarea>
+    </label>
+    <label for="e-estado">¿Se muestra?
+      <select id="e-estado">
+        <option value="disponible">Disponible</option>
+        <option value="agotado">Agotado (se ve, pero marcado agotado)</option>
+        <option value="oculto">Oculto (solo tú lo ves)</option>
+      </select>
+    </label>
+    <p class="err" id="e-err" role="alert" hidden></p>
+    <button class="btn" type="submit" id="e-guardar">Guardar</button>
+    <button class="btn ghost" type="button" id="e-borrar" hidden>Borrar producto</button>
+  </form>
+</dialog>
+
+<!-- nuevo apartado (solo tienda) -->
+<dialog class="sheet" id="d-ap" aria-labelledby="a-titulo">
+  <form class="sheet-body" id="f-ap" novalidate>
+    <div class="sheet-top"><h2 id="a-titulo">Nuevo apartado</h2><button class="x" type="button" data-cerrar aria-label="Cerrar">×</button></div>
+    <p class="note" id="a-cliente"></p>
+    <label for="a-prenda">Prenda
+      <input id="a-prenda" required maxlength="80" list="a-prods" placeholder="Ej. Vestido midi camello talla M" autocapitalize="sentences">
+      <datalist id="a-prods"></datalist>
+    </label>
+    <div class="row">
+      <label for="a-total">Precio total
+        <input id="a-total" type="number" inputmode="numeric" min="1" step="1" required>
+      </label>
+      <label for="a-anticipo">Deja hoy
+        <input id="a-anticipo" type="number" inputmode="numeric" min="0" step="1" required>
+      </label>
+    </div>
+    <p class="note" id="a-regla"></p>
+    <p class="err" id="a-err" role="alert" hidden></p>
+    <button class="btn" type="submit" id="a-guardar">Guardar apartado</button>
+  </form>
+</dialog>
+
+<!-- registrar abono (solo tienda) -->
+<dialog class="sheet" id="d-abono" aria-labelledby="b-titulo">
+  <form class="sheet-body" id="f-abono" novalidate>
+    <div class="sheet-top"><h2 id="b-titulo">Registrar abono</h2><button class="x" type="button" data-cerrar aria-label="Cerrar">×</button></div>
+    <p id="b-resumen"></p>
+    <label for="b-monto">¿Cuánto abona?
+      <input id="b-monto" type="number" inputmode="numeric" min="1" step="1" required>
+    </label>
+    <button class="btn ghost" type="button" id="b-todo">Liquida todo</button>
+    <p class="err" id="b-err" role="alert" hidden></p>
+    <button class="btn" type="submit" id="b-guardar">Guardar abono</button>
+  </form>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="qrcode.min.js"></script>
+<script>
+/* ===================== CONFIGURACIÓN ===================== */
+const CONFIG = {
+  // URL del Apps Script (Google Sheets). Vacía = modo demostración (datos solo en este navegador).
+  API_URL: '',
+  // Dirección pública de esta página (la que va en el QR del cartel). Vacía = la dirección actual,
+  // así el cartel y los enlaces funcionan igual en GitHub Pages, Cloudflare Pages o Netlify.
+  APP_URL: '',
+  META: 5,                                   // sellos para el premio
+  SELLO_REGALO: 1,                           // sellos que se regalan al crear la tarjeta (igual que en Code.gs)
+  REGLA: '1 sello por cada compra de $400 o más, pagando en efectivo o transferencia',
+  PREMIO: '$120 de descuento en tu siguiente compra',
+  PIN_DEMO: '2603',                           // solo para el modo demostración
+  // Catálogo y apartados
+  WHATSAPP: '525533766439',                  // WhatsApp de la tienda (52 + 10 dígitos) para los pedidos
+  CATEGORIAS: ['Vestidos', 'Blusas', 'Pantalones', 'Conjuntos', 'Faldas', 'Accesorios'],
+  TALLAS: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Unitalla'],
+  MAX_FOTOS: 6,
+  APARTADO_PCT: 30,                          // % mínimo para apartar (igual que en Catalogo.gs)
+  APARTADO_DIAS: 21                          // días para liquidar (igual que en Catalogo.gs)
+};
+/* ========================================================== */
+
+const $ = (id) => document.getElementById(id);
+const DEMO = !CONFIG.API_URL;
+const APP_URL = CONFIG.APP_URL || location.href.split(/[?#]/)[0];
+// El catálogo se comparte con su propia dirección (/catalogo/) para que WhatsApp muestre su portada
+const CAT_URL = new URL('../catalogo/', APP_URL).href;
+const enlaceProd = (id) => CAT_URL + '#' + encodeURIComponent(id);
+// localStorage / sessionStorage pueden fallar (modo privado, iframes); nunca deben romper la página
+const mkStore = (s) => ({
+  get(k) { try { return s().getItem(k); } catch { return null; } },
+  set(k, v) { try { s().setItem(k, v); } catch {} },
+  del(k) { try { s().removeItem(k); } catch {} },
+});
+const store = mkStore(() => localStorage), sesion = mkStore(() => sessionStorage);
+const fishSVG = '<svg viewBox="0 0 64 40" aria-hidden="true"><use href="#fish"/></svg>';
+const giftSVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#gift"/></svg>';
+
+/* ---------- backend: demo local con la misma lógica que el Apps Script ---------- */
+const local = (() => {
+  const KEY = 'jireh_lealtad_demo';
+  const load = () => { try { return JSON.parse(store.get(KEY)) || { clientes: [] }; } catch { return { clientes: [] }; } };
+  const save = (db) => store.set(KEY, JSON.stringify(db));
+  const alfabeto = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  const nuevoId = (db) => { let id; do { id = 'JR-' + Array.from({ length: 4 }, () => alfabeto[Math.floor(Math.random() * alfabeto.length)]).join(''); } while (db.clientes.some(c => c.id === id)); return id; };
+  const pub = (c, conTel) => { const t = { id: c.id, nombre: c.nombre, sellos: c.sellos, premios: c.premios, meta: CONFIG.META, ultima: c.ultima }; if (conTel) t.tel = c.tel; return t; };
+  const sinPermiso = (p) => p.pin === CONFIG.PIN_DEMO ? null : { ok: false, error: 'PIN incorrecto.' };
+  const porId = (db, q) => { const s = String(q || '').trim().toUpperCase(); return db.clientes.find(c => c.id === s || c.id === 'JR-' + s); };
+  const find = (db, q) => { const d = String(q || '').replace(/\D/g, '').slice(-10); return porId(db, q) || (d.length === 10 ? db.clientes.find(c => c.tel === d) : undefined); };
+  return {
+    async registrar({ nombre, tel }) {
+      const db = load(); tel = String(tel).replace(/\D/g, '').slice(-10); nombre = String(nombre).replace(/\s+/g, ' ').trim().slice(0, 40);
+      if (!nombre || tel.length !== 10) return { ok: false, error: 'Escribe tu nombre y un teléfono de 10 dígitos.' };
+      let c = db.clientes.find(x => x.tel === tel);
+      if (c) return { ok: true, existente: true, tarjeta: pub(c) };
+      c = { id: nuevoId(db), nombre, tel, sellos: CONFIG.SELLO_REGALO, premios: 0, alta: new Date().toISOString(), ultima: '' };
+      db.clientes.push(c); save(db); return { ok: true, tarjeta: pub(c) };
+    },
+    // la tarjeta de la clienta solo se abre con su código, no con el teléfono
+    async tarjeta({ id }) { const c = porId(load(), id); return c ? { ok: true, tarjeta: pub(c) } : { ok: false, error: 'No encontramos esa tarjeta.' }; },
+    async pin(p) { return sinPermiso(p) || { ok: true }; },
+    async buscar(p) { const no = sinPermiso(p); if (no) return no; const c = find(load(), p.q); return c ? { ok: true, tarjeta: pub(c, true) } : { ok: false, error: 'No hay ninguna clienta con ese código o teléfono.' }; },
+    async sellar(p) {
+      const no = sinPermiso(p); if (no) return no;
+      const db = load(); const c = porId(db, p.id); if (!c) return { ok: false, error: 'No encontramos esa tarjeta.' };
+      const d = Number(p.delta) < 0 ? -1 : 1;
+      if (d > 0 && c.sellos >= CONFIG.META) return { ok: false, error: 'La tarjeta ya está llena. Entrega el premio primero.' };
+      if (d < 0 && c.sellos <= 0) return { ok: false, error: 'La tarjeta no tiene sellos.' };
+      c.sellos += d; c.ultima = new Date().toISOString(); save(db); return { ok: true, tarjeta: pub(c, true) };
+    },
+    async canjear(p) {
+      const no = sinPermiso(p); if (no) return no;
+      const db = load(); const c = porId(db, p.id); if (!c) return { ok: false, error: 'No encontramos esa tarjeta.' };
+      if (c.sellos < CONFIG.META) return { ok: false, error: 'Todavía no completa sus sellos.' };
+      c.sellos = 0; c.premios += 1; c.ultima = new Date().toISOString(); save(db); return { ok: true, tarjeta: pub(c, true) };
+    },
+    async clientes(p) { const no = sinPermiso(p); if (no) return no; return { ok: true, clientes: load().clientes.map(c => pub(c, true)) }; },
+
+    /* catálogo (en la demo las fotos se guardan dentro del navegador) */
+    async catalogo(p) {
+      const duena = p.pin === CONFIG.PIN_DEMO;
+      return { ok: true, duena, productos: (load().productos || []).filter(x => duena || x.estado !== 'oculto') };
+    },
+    async subirFoto(p) { return sinPermiso(p) || { ok: true, foto: p.foto }; },
+    async guardarProducto(p) {
+      const no = sinPermiso(p); if (no) return no;
+      const db = load(); db.productos = db.productos || [];
+      const d = p.producto, ahora = new Date().toISOString();
+      const i = db.productos.findIndex(x => x.id === d.id);
+      const prod = { ...d, alta: i >= 0 ? db.productos[i].alta : ahora, actualizado: ahora };
+      if (i >= 0) db.productos[i] = prod; else db.productos.push(prod);
+      try { localStorage.setItem(KEY, JSON.stringify(db)); } catch { return { ok: false, error: 'En la demostración ya no caben más fotos en este navegador.' }; }
+      return { ok: true, producto: prod };
+    },
+    async borrarProducto(p) {
+      const no = sinPermiso(p); if (no) return no;
+      const db = load(); db.productos = (db.productos || []).filter(x => x.id !== p.id); save(db); return { ok: true };
+    },
+
+    /* apartados y abonos */
+    async apartados(p) {
+      const no = sinPermiso(p); if (no) return no;
+      const xs = (load().apartados || []).filter(a => p.cliente ? a.cliente === p.cliente : a.estado === 'abierto');
+      return { ok: true, apartados: xs.map(a => pubAp(a, true)) };
+    },
+    async misApartados(p) {
+      const c = porId(load(), p.id); if (!c) return { ok: false, error: 'No encontramos esa tarjeta.' };
+      return { ok: true, apartados: (load().apartados || []).filter(a => a.cliente === c.id && a.estado === 'abierto').map(a => pubAp(a)) };
+    },
+    async nuevoApartado(p) {
+      const no = sinPermiso(p); if (no) return no;
+      const db = load(); db.apartados = db.apartados || [];
+      const d = p.apartado; const c = porId(db, d.cliente); if (!c) return { ok: false, error: 'No encontramos a la clienta.' };
+      const v = validarApartado(d); if (v) return { ok: false, error: v };
+      let a = db.apartados.find(x => x.id === d.id);
+      if (!a) {
+        const alta = new Date(), lim = new Date(alta.getTime() + CONFIG.APARTADO_DIAS * 864e5);
+        a = { id: d.id, cliente: c.id, nombre: c.nombre, tel: c.tel, prenda: d.prenda, total: Number(d.total), pagado: Number(d.anticipo), alta: alta.toISOString(), limite: lim.toISOString(), estado: 'abierto', abonos: [{ id: d.id, fecha: alta.toISOString(), monto: Number(d.anticipo) }] };
+        if (a.pagado >= a.total) a.estado = 'liquidado';
+        db.apartados.push(a); save(db);
+      }
+      return { ok: true, apartado: pubAp(a, true) };
+    },
+    async abonar(p) {
+      const no = sinPermiso(p); if (no) return no;
+      const db = load(); const a = (db.apartados || []).find(x => x.id === p.apartado);
+      if (!a || a.estado !== 'abierto') return { ok: false, error: 'Ese apartado ya no está abierto.' };
+      if (!a.abonos.some(b => b.id === p.abono)) {
+        const m = Math.round(Number(p.monto));
+        if (!(m > 0) || m > a.total - a.pagado) return { ok: false, error: `El abono debe ser de $1 a $${a.total - a.pagado}.` };
+        a.pagado += m; a.abonos.push({ id: p.abono, fecha: new Date().toISOString(), monto: m });
+        if (a.pagado >= a.total) a.estado = 'liquidado';
+        save(db);
+      }
+      return { ok: true, apartado: pubAp(a, true) };
+    },
+    async cancelarApartado(p) {
+      const no = sinPermiso(p); if (no) return no;
+      const db = load(); const a = (db.apartados || []).find(x => x.id === p.apartado);
+      if (!a) return { ok: false, error: 'No encontramos ese apartado.' };
+      a.estado = 'cancelado'; save(db); return { ok: true, apartado: pubAp(a, true) };
+    },
+  };
+})();
+function pubAp(a, conTel) {
+  const t = { id: a.id, cliente: a.cliente, nombre: a.nombre, prenda: a.prenda, total: a.total, pagado: a.pagado, saldo: Math.max(0, a.total - a.pagado), alta: a.alta, limite: a.limite, estado: a.estado, abonos: (a.abonos || []).map(b => ({ fecha: b.fecha, monto: b.monto })) };
+  if (conTel) t.tel = a.tel;
+  return t;
+}
+function validarApartado(d) {
+  const total = Math.round(Number(d.total)), ant = Math.round(Number(d.anticipo));
+  if (!String(d.prenda || '').trim()) return 'Escribe qué prenda se aparta.';
+  if (!(total > 0)) return 'Escribe el precio total.';
+  if (!(ant >= 0) || ant > total) return 'El anticipo no puede ser mayor que el precio.';
+  return '';
+}
+
+// Con datos móviles la conexión se corta seguido (cambio de antena, 4G↔3G): las consultas se reintentan solas.
+// Poner sellos y entregar premios NO se reintentan, para no duplicarlos si el primer intento sí llegó.
+// Guardar productos, apartados y abonos sí se puede reintentar: cada uno lleva un código propio y el servidor no lo repite.
+const SIN_REINTENTO = ['sellar', 'canjear', 'cancelarApartado'];
+// El catálogo y los apartados viajan por POST (las fotos no caben en una dirección); los atiende Catalogo.gs
+const POR_POST = ['catalogo', 'subirFoto', 'guardarProducto', 'borrarProducto', 'apartados', 'misApartados', 'nuevoApartado', 'abonar', 'cancelarApartado'];
+async function api(action, params = {}) {
+  if (DEMO) return local[action](params);
+  const intentos = SIN_REINTENTO.includes(action) ? 1 : 3;
+  let r;
+  for (let i = 0; i < intentos; i++) {
+    if (i) await new Promise(ok => setTimeout(ok, 1200 * i));
+    r = await api1(action, params);
+    if (!r.red) break;
+  }
+  return r;
+}
+async function api1(action, params) {
+  const post = POR_POST.includes(action);
+  const ctrl = new AbortController(); const timer = setTimeout(() => ctrl.abort(), post ? 45000 : 20000);
+  try {
+    // Sin encabezados extra el POST va como texto: así Google no exige permiso previo (CORS) y responde directo
+    const r = post
+      ? await fetch(CONFIG.API_URL, { method: 'POST', body: JSON.stringify({ action, ...params }), cache: 'no-store', signal: ctrl.signal })
+      : await fetch(CONFIG.API_URL + '?' + new URLSearchParams({ action, ...params }), { cache: 'no-store', signal: ctrl.signal });
+    const txt = await r.text();
+    try { return JSON.parse(txt); } catch {
+      // Google respondió una página en vez de datos: se muestra su título para saber qué pidió (permiso, versión, etc.)
+      const titulo = (/<title>([^<]*)<\/title>/i.exec(txt) || [])[1] || '';
+      const det = (txt.replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>|<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()).slice(0, 160);
+      return { ok: false, error: (post ? 'El Apps Script no respondió al catálogo (¿falta pegar Catalogo.gs o hacer Nueva versión?).' : 'El servidor no respondió bien. Revisa que el Apps Script esté publicado para “Cualquier persona”.') + ` [${r.status}] ${titulo || det}` };
+    }
+  } catch (e) {
+    return { ok: false, red: true, error: e.name === 'AbortError' ? 'El servidor tardó demasiado. Inténtalo otra vez.' : 'Sin conexión. Revisa tu internet e inténtalo otra vez.' };
+  } finally { clearTimeout(timer); }
+}
+
+/* ---------- utilidades ---------- */
+let toastT;
+function toast(msg, ms = 2600) { const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, ms); }
+function showErr(el, msg) { el.textContent = msg || ''; el.hidden = !msg; }
+// Se dibuja al doble de tamaño para que se vea nítido en pantallas de alta densidad; el CSS lo muestra al tamaño real
+function qr(el, text, size) {
+  if (el.dataset.qr === text) return;
+  el.innerHTML = ''; el.dataset.qr = text;
+  if (window.QRCode) new QRCode(el, { text, width: size * 2, height: size * 2, colorDark: '#22152C', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+  else el.textContent = text;
+}
+function fecha(iso) { if (!iso) return 'sin visitas'; const d = new Date(iso); return isNaN(d) ? 'sin visitas' : d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' }); }
+function faltan(n, meta) { const f = meta - n; return f <= 0 ? '¡Premio listo!' : f === 1 ? 'Te falta 1 sello' : `Te faltan ${f} sellos`; }
+const peso = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 });
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const codigo = (pre) => pre + Array.from({ length: 6 }, () => 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 31)]).join('');
+function waLink(numero, texto) { return `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`; }
+function cerrarAlTocarFuera(d) { d.addEventListener('click', (e) => { if (e.target === d) d.close(); }); }
+document.querySelectorAll('dialog [data-cerrar]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
+const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+/* ---------- vistas ---------- */
+let clientaIniciada = false;
+let catPendiente = null;  // #catalogo/P-XXXXXX abre esa prenda directo (enlace para compartir)
+function vistaDeHash() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (h === 'catalogo' || h.startsWith('catalogo/')) { catPendiente = h.split('/')[1] || null; return 'catalogo'; }
+  return ['tienda', 'cartel'].includes(h) ? h : 'clienta';
+}
+function setView(v) {
+  ['clienta', 'tienda', 'cartel', 'catalogo'].forEach(n => { $('v-' + n).hidden = n !== v; });
+  $('app').classList.toggle('ancho', v === 'catalogo');
+  if (v === 'catalogo') initCatalogo();
+  document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
+  if (v === 'clienta') { if (!clientaIniciada) { clientaIniciada = true; initClienta(); } else if (miTarjeta) cargarTarjeta(miTarjeta.id); }
+  if (v === 'tienda') initTienda();
+  if (v === 'cartel') renderCartel();
+  if (v !== 'tienda') stopScan();
+}
+document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => { catPendiente = null; setView(b.dataset.view); }));
+window.addEventListener('hashchange', () => setView(vistaDeHash()));
+
+/* ---------- clienta ---------- */
+function renderRules() {
+  const items = [];
+  if (CONFIG.SELLO_REGALO > 0) items.push([giftSVG, `<strong>${CONFIG.SELLO_REGALO === 1 ? 'Tu primer sello es' : `Tus primeros ${CONFIG.SELLO_REGALO} sellos son`} de regalo</strong> al crear tu tarjeta.`]);
+  items.push([fishSVG, `<strong>${CONFIG.REGLA}.</strong> Muestra tu tarjeta en caja.`], [giftSVG, `<strong>Al juntar ${CONFIG.META} sellos:</strong> ${CONFIG.PREMIO}.`]);
+  $('rules').innerHTML = items.map(([i, t]) => `<span class="ico">${i}</span><p>${t}</p>`).join('');
+}
+let miTarjeta = null, ultimosSellos = null;
+function renderTarjeta(t) {
+  const meta = t.meta || CONFIG.META;
+  $('c-loading').hidden = true; $('c-registro').hidden = true; $('c-tarjeta').hidden = false;
+  $('stamps').innerHTML = Array.from({ length: meta }, (_, i) => {
+    const on = i < t.sellos, gift = i === meta - 1;
+    const pop = on && ultimosSellos !== null && i >= ultimosSellos ? ' pop' : '';
+    return `<div class="stamp${on ? ' on' : ''}${gift ? ' gift' : ''}${pop}">${on ? (gift ? giftSVG : fishSVG) : (gift ? giftSVG : `<span>${i + 1}</span>`)}</div>`;
+  }).join('');
+  $('stamps').setAttribute('aria-label', `${t.sellos} de ${meta} sellos`);
+  ultimosSellos = t.sellos;
+  $('t-nombre').textContent = t.nombre;
+  $('t-count').innerHTML = `${t.sellos}<small>/${meta}</small>`;
+  $('t-premio').textContent = 'Premio: ' + CONFIG.PREMIO;
+  $('t-premios').textContent = t.premios ? `Premios ganados: ${t.premios}` : '';
+  const listo = t.sellos >= meta;
+  $('t-banner').className = 'banner' + (listo ? ' ready' : '');
+  $('t-banner').textContent = listo ? `¡Completaste tu tarjeta! Pide en caja tu premio: ${CONFIG.PREMIO}.` : `${faltan(t.sellos, meta)} para tu premio.`;
+  $('t-code').textContent = t.id;
+  qr($('t-qr'), t.id, 116);
+}
+function miEnlace(id) { return APP_URL + '?c=' + encodeURIComponent(id); }
+// Deja el código en la dirección: así "Agregar a inicio" guarda la tarjeta aunque el celular no comparta datos con el navegador (iPhone)
+function fijarEnlace(id) { if (DEMO) return; try { history.replaceState(null, '', id ? '?c=' + encodeURIComponent(id) + location.hash : location.pathname + location.hash); } catch {} }
+function mostrarTarjeta(t) { miTarjeta = t; store.set('jireh_tarjeta', t.id); store.set('jireh_tarjeta_copia', JSON.stringify(t)); fijarEnlace(t.id); renderTarjeta(t); }
+// Última versión guardada en el celular: se muestra al instante y también si no hay internet
+function copiaGuardada(id) {
+  try { const t = JSON.parse(store.get('jireh_tarjeta_copia')); return t && t.id === String(id).trim().toUpperCase() ? t : null; } catch { return null; }
+}
+async function cargarTarjeta(id) {
+  const r = await api('tarjeta', { id });
+  if (r.ok) { mostrarTarjeta(r.tarjeta); cargarMisApartados(r.tarjeta.id); return true; }
+  if (r.red && miTarjeta) toast('Sin internet: mostramos tu tarjeta guardada. Toca «Actualizar» cuando tengas señal.', 5000);
+  return r.red ? null : false;
+}
+async function initClienta() {
+  renderRules();
+  let id = null;
+  try { id = new URLSearchParams(location.search).get('c'); } catch {}
+  id = id || store.get('jireh_tarjeta');
+  if (id) {
+    const copia = copiaGuardada(id);
+    if (copia) { miTarjeta = copia; renderTarjeta(copia); }
+    const r = await cargarTarjeta(id);
+    if (r || miTarjeta) return;
+    if (r === null) {  // no hubo conexión: no mandar a registrarse otra vez, solo pedir que reintente
+      $('c-loading').textContent = 'No pudimos conectar. Revisa tu señal o internet y vuelve a abrir esta página.';
+      return;
+    }
+  }
+  $('c-loading').hidden = true; $('c-registro').hidden = false;
+}
+$('f-registro').addEventListener('submit', async (e) => {
+  e.preventDefault(); showErr($('r-err'));
+  const btn = $('r-btn'); if (btn.disabled) return;
+  btn.disabled = true; btn.textContent = 'Creando tu tarjeta…';
+  const r = await api('registrar', { nombre: $('r-nombre').value, tel: $('r-tel').value });
+  btn.disabled = false; btn.textContent = 'Crear mi tarjeta';
+  if (!r.ok) return showErr($('r-err'), r.error);
+  ultimosSellos = null; mostrarTarjeta(r.tarjeta);
+  toast(r.existente ? `¡Bienvenida de vuelta, ${r.tarjeta.nombre}!` : CONFIG.SELLO_REGALO ? '¡Tu tarjeta está lista y ya tienes tu primer sello de regalo!' : '¡Tu tarjeta está lista!');
+});
+if (navigator.share) $('t-copy').textContent = 'Compartir mi enlace';
+$('t-copy').addEventListener('click', async () => {
+  if (!miTarjeta) return;
+  const link = miEnlace(miTarjeta.id);
+  if (navigator.share) {
+    try { await navigator.share({ title: 'Mi tarjeta Jireh shop', url: link }); return; }
+    catch (e) { if (e.name === 'AbortError') return; }
+  }
+  try { await navigator.clipboard.writeText(link); toast('Enlace copiado'); } catch { toast(link, 8000); }
+});
+$('t-refresh').addEventListener('click', async () => {
+  if (!miTarjeta) return;
+  const b = $('t-refresh'); b.disabled = true;
+  toast(await cargarTarjeta(miTarjeta.id) ? 'Tarjeta actualizada' : 'No se pudo actualizar. Revisa tu internet.');
+  b.disabled = false;
+});
+// Apartados abiertos de la clienta, con su saldo (si el Apps Script aún no tiene Catalogo.gs, simplemente no se muestran)
+async function cargarMisApartados(id) {
+  const r = await api('misApartados', { id });
+  const xs = r.ok ? r.apartados : [];
+  $('t-aps').hidden = !xs.length;
+  $('t-aps-list').innerHTML = xs.map(a => `<div class="ap${vencido(a) ? ' vencido' : ''}"><span class="t">${esc(a.prenda)}</span>${barra(a)}${numsAp(a)}<span class="note">${limiteTexto(a)}</span></div>`).join('');
+}
+$('t-otra').addEventListener('click', () => {
+  $('t-aps').hidden = true;
+  miTarjeta = null; ultimosSellos = null; store.del('jireh_tarjeta'); fijarEnlace(null);
+  $('f-registro').reset(); $('c-tarjeta').hidden = true; $('c-registro').hidden = false; $('r-nombre').focus();
+});
+
+/* ---------- tienda ---------- */
+let PIN = null, actual = null, todas = [], enCurso = false, pinGuardadoProbado = false;
+$('pin-hint').hidden = !DEMO;
+async function validarPin(p) {
+  const r = await api('pin', { pin: p });
+  if (r.ok) { PIN = p; sesion.set('jireh_pin', p); }
+  return r;
+}
+function tiendaAbierta() { $('f-pin').hidden = true; $('s-main').hidden = false; showErr($('pin-err')); cargarLista(); cargarApartados(); }
+async function entrarTienda(p) {
+  const r = await validarPin(p);
+  if (r.ok) tiendaAbierta();
+  return r;
+}
+// El PIN se recuerda mientras la pestaña siga abierta, para no escribirlo en cada recarga (sirve igual para la tienda y el catálogo)
+async function recuperarPin() {
+  if (PIN) return true;
+  const p = sesion.get('jireh_pin');
+  if (!p || pinGuardadoProbado) return false;
+  pinGuardadoProbado = true;
+  const r = await validarPin(p);
+  if (!r.ok && !r.red) sesion.del('jireh_pin');
+  return !!r.ok;
+}
+function initTienda() { recuperarPin().then(ok => { if (ok) tiendaAbierta(); }); }
+function salirDuena() {
+  PIN = null; sesion.del('jireh_pin');
+  $('f-pin').hidden = false; $('s-main').hidden = true; $('s-client').hidden = true; actual = null;
+}
+$('f-pin').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('pin-btn'); if (btn.disabled) return;
+  btn.disabled = true;
+  const r = await entrarTienda($('pin').value.trim());
+  btn.disabled = false;
+  if (!r.ok) showErr($('pin-err'), r.error || 'PIN incorrecto.');
+  else $('pin').value = '';
+});
+function renderCliente(t) {
+  actual = t; $('s-client').hidden = false;
+  $('s-nombre').textContent = t.nombre; $('s-code').textContent = t.id;
+  $('s-tel').textContent = `Tel. ${t.tel ? t.tel.replace(/(\d{2})(\d{4})(\d{4})/, '$1 $2 $3') : ''} · última visita: ${fecha(t.ultima)} · premios: ${t.premios}`;
+  $('s-mini').innerHTML = Array.from({ length: t.meta }, (_, i) => `<i class="${i < t.sellos ? 'on' : ''}"></i>`).join('');
+  const listo = t.sellos >= t.meta;
+  $('s-status').innerHTML = listo ? `<span class="pill">Premio listo</span> Entrégale: ${CONFIG.PREMIO}` : `${t.sellos} de ${t.meta} sellos. Le faltan ${t.meta - t.sellos}.`;
+  $('s-regla').textContent = `Sello solo si: ${CONFIG.REGLA.replace(/^1 sello por cada /, '')}.`;
+  $('s-add').disabled = enCurso || listo; $('s-redeem').disabled = enCurso || !listo; $('s-undo').disabled = enCurso || t.sellos <= 0;
+  if (apsDe !== t.id) { apsDe = t.id; $('s-aps').innerHTML = '<p class="note">Cargando apartados…</p>'; cargarApsCliente(t.id); }
+}
+async function buscar(q) {
+  showErr($('s-err')); resetCanje();
+  const btn = $('s-buscar'); btn.disabled = true;
+  const r = await api('buscar', { q, pin: PIN });
+  btn.disabled = false;
+  if (!r.ok) { $('s-client').hidden = true; actual = null; return showErr($('s-err'), r.error); }
+  apsDe = null; renderCliente(r.tarjeta); $('s-q').value = '';
+  $('s-client').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+$('f-buscar').addEventListener('submit', (e) => { e.preventDefault(); if (!$('s-buscar').disabled) buscar($('s-q').value); });
+// Una sola acción a la vez: evita poner dos sellos por un doble toque mientras responde el servidor
+async function accion(action, extra, msg) {
+  if (enCurso || !actual) return;
+  enCurso = true; renderCliente(actual);
+  try {
+    const r = await api(action, { id: actual.id, pin: PIN, ...extra });
+    if (!r.ok) return toast(r.error);
+    actual = r.tarjeta; toast(msg(r.tarjeta)); actualizarEnLista(r.tarjeta);
+  } finally { enCurso = false; renderCliente(actual); }
+}
+$('s-add').addEventListener('click', () => accion('sellar', { delta: 1 }, t => t.sellos >= t.meta ? `Sello puesto. ¡${t.nombre} completó su tarjeta!` : `Sello puesto a ${t.nombre}`));
+$('s-undo').addEventListener('click', () => accion('sellar', { delta: -1 }, () => 'Sello quitado'));
+// Entregar premio pide un segundo toque para confirmar (reinicia la tarjeta)
+let canjeT;
+function resetCanje() { clearTimeout(canjeT); const b = $('s-redeem'); delete b.dataset.confirm; b.textContent = 'Entregar premio'; }
+$('s-redeem').addEventListener('click', () => {
+  const b = $('s-redeem');
+  if (!b.dataset.confirm) { b.dataset.confirm = '1'; b.textContent = '¿Seguro? Toca otra vez'; canjeT = setTimeout(resetCanje, 4000); return; }
+  resetCanje(); accion('canjear', {}, t => `Premio entregado. La tarjeta de ${t.nombre} empieza de nuevo.`);
+});
+const porFecha = (a, b) => (b.ultima || '').localeCompare(a.ultima || '');
+async function cargarLista() {
+  const r = await api('clientes', { pin: PIN }); if (!r.ok) return;
+  todas = r.clientes.sort(porFecha); renderLista();
+}
+function actualizarEnLista(t) {
+  const i = todas.findIndex(c => c.id === t.id);
+  if (i >= 0) todas[i] = t; else todas.push(t);
+  todas.sort(porFecha); renderLista();
+}
+function renderLista() {
+  const f = norm($('s-filter').value.trim()), fd = f.replace(/\D/g, '');
+  const xs = todas.filter(c => !f || norm(c.nombre).includes(f) || c.id.toLowerCase().includes(f) || (fd.length >= 3 && (c.tel || '').includes(fd)));
+  $('s-total').textContent = `${todas.length} con tarjeta`;
+  const list = $('s-list');
+  if (!xs.length) { list.innerHTML = `<p class="note" style="padding:10px 4px">${todas.length ? 'Nadie con esa búsqueda.' : 'Todavía no hay clientas. Cuando alguien escanee el cartel aparecerá aquí.'}</p>`; return; }
+  const frag = document.createDocumentFragment();
+  xs.forEach(c => {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.id = c.id;
+    const n = document.createElement('span'); n.className = 'n'; n.textContent = c.nombre;
+    const s = document.createElement('span'); s.className = 's'; s.textContent = c.sellos >= c.meta ? 'Premio listo' : `${c.sellos}/${c.meta}`;
+    const t = document.createElement('span'); t.className = 't'; t.textContent = `${c.id} · última visita: ${fecha(c.ultima)}`;
+    b.append(n, s, t); frag.append(b);
+  });
+  list.replaceChildren(frag);
+}
+$('s-list').addEventListener('click', (e) => { const b = e.target.closest('button[data-id]'); if (b) buscar(b.dataset.id); });
+$('s-filter').addEventListener('input', renderLista);
+
+// Escáner con la cámara (funciona en la página publicada; carga la librería solo cuando se usa)
+let scanner = null, abriendo = false;
+function loadScript(src) { return new Promise((ok, bad) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = bad; document.head.append(s); }); }
+// Acepta el código solo o un enlace con ?c=JR-XXXX
+function codigoDe(txt) { try { return new URL(txt).searchParams.get('c') || txt; } catch { return txt; } }
+async function stopScan() {
+  const s = scanner; scanner = null;
+  if (s) { try { await s.stop(); } catch {} try { s.clear(); } catch {} }
+  $('reader').hidden = true; $('s-scan').textContent = 'Escanear tarjeta con la cámara';
+}
+$('s-scan').addEventListener('click', async () => {
+  if (scanner) return stopScan();
+  if (abriendo) return;
+  const note = $('s-scan-note'); note.hidden = true; abriendo = true;
+  try {
+    if (!window.Html5Qrcode) await loadScript('html5-qrcode.min.js');
+    $('reader').hidden = false; $('s-scan').textContent = 'Cerrar cámara';
+    const s = scanner = new Html5Qrcode('reader');
+    const caja = (w, h) => { const m = Math.max(120, Math.floor(Math.min(w, h) * 0.7)); return { width: m, height: m }; };
+    // el lector puede avisar varias veces el mismo código: solo se usa la primera
+    await s.start({ facingMode: 'environment' }, { fps: 10, qrbox: caja }, (txt) => { if (scanner !== s) return; stopScan(); buscar(codigoDe(txt)); });
+  } catch {
+    stopScan(); note.hidden = false;
+    note.textContent = 'No se pudo abrir la cámara aquí. Escribe el código que aparece debajo del QR de la clienta.';
+  } finally { abriendo = false; }
+});
+
+// La página se actualiza sola cuando se regresa a ella
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) return;
+  if (!$('v-clienta').hidden && miTarjeta) cargarTarjeta(miTarjeta.id);
+  if (!$('v-tienda').hidden && PIN) { cargarLista(); cargarApartados(); }
+  if (!$('v-catalogo').hidden) cargarCatalogo();
+});
+
+/* ---------- apartados y abonos (tienda) ---------- */
+let apsDe = null, apsCliente = [], apsAbiertos = [], apAbono = null;
+const dia = (iso) => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' }); };
+const diasPara = (iso) => Math.ceil((new Date(iso) - Date.now()) / 864e5);
+const vencido = (a) => a.estado === 'abierto' && diasPara(a.limite) < 0;
+function limiteTexto(a) {
+  if (a.estado === 'liquidado') return 'Liquidado. ¡Ya puedes recoger tu prenda!';
+  if (a.estado === 'cancelado') return 'Cancelado';
+  const n = diasPara(a.limite);
+  return n < 0 ? `Venció el ${dia(a.limite)}` : n === 0 ? 'Vence hoy' : `Liquidar a más tardar el ${dia(a.limite)} (${n === 1 ? 'falta 1 día' : `faltan ${n} días`})`;
+}
+const barra = (a) => `<div class="bar" aria-hidden="true"><i style="width:${Math.min(100, Math.round(100 * a.pagado / a.total))}%"></i></div>`;
+const numsAp = (a) => `<div class="nums"><span>Total<b>${peso.format(a.total)}</b></span><span>Abonado<b>${peso.format(a.pagado)}</b></span><span class="saldo">Saldo<b>${peso.format(a.saldo)}</b></span></div>`;
+function mensajeSaldo(a) {
+  const nombre = a.nombre.split(' ')[0];
+  if (a.estado === 'liquidado') return `Hola ${nombre}, te escribimos de Jireh shop. Tu apartado de *${a.prenda}* ya quedó liquidado (${peso.format(a.total)}). ¡Gracias! Ya puedes pasar por tu prenda.`;
+  const ult = a.abonos[a.abonos.length - 1];
+  return `Hola ${nombre}, te escribimos de Jireh shop 💜\nTu apartado: *${a.prenda}*\nTotal: ${peso.format(a.total)}\n${ult ? `Último abono: ${peso.format(ult.monto)} (${dia(ult.fecha)})\n` : ''}Abonado: ${peso.format(a.pagado)}\n*Saldo: ${peso.format(a.saldo)}*\nFecha límite: ${dia(a.limite)}\n¡Gracias!`;
+}
+function apHTML(a) {
+  const abierto = a.estado === 'abierto';
+  const tag = vencido(a) ? `<span class="tag">Vencido</span>` : a.estado === 'liquidado' ? '<span class="tag ok">Liquidado</span>' : a.estado === 'cancelado' ? '<span class="tag">Cancelado</span>' : '';
+  const hist = a.abonos.length ? `<span class="note">Abonos: ${a.abonos.map(b => `${peso.format(b.monto)} (${dia(b.fecha)})`).join(', ')}</span>` : '';
+  return `<div class="ap${vencido(a) ? ' vencido' : ''}" data-ap="${esc(a.id)}">
+    <div class="client-head"><span class="t">${esc(a.prenda)}</span>${tag}</div>
+    ${barra(a)}${numsAp(a)}
+    <span class="note">${a.estado === 'abierto' ? limiteTexto(a) : `Apartado el ${dia(a.alta)}`}</span>${hist}
+    <div class="row">
+      ${abierto ? '<button class="btn sm" type="button" data-accion="abonar">Registrar abono</button>' : ''}
+      ${a.estado !== 'cancelado' && a.tel ? `<a class="btn ghost sm wa-ap" target="_blank" rel="noopener" href="${esc(waLink('52' + a.tel, mensajeSaldo(a)))}">Enviar saldo por WhatsApp</a>` : ''}
+      ${abierto ? '<button class="btn ghost sm" type="button" data-accion="cancelar">Cancelar</button>' : ''}
+    </div></div>`;
+}
+function renderApsCliente() {
+  // abiertos primero; de los cerrados solo los 3 más recientes
+  const ab = apsCliente.filter(a => a.estado === 'abierto'), cer = apsCliente.filter(a => a.estado !== 'abierto').slice(-3).reverse();
+  $('s-aps').innerHTML = ab.length || cer.length ? [...ab, ...cer].map(apHTML).join('') : '<p class="note">No tiene apartados.</p>';
+}
+async function cargarApsCliente(id) {
+  const r = await api('apartados', { pin: PIN, cliente: id });
+  if (apsDe !== id) return;
+  if (!r.ok) { $('s-aps').innerHTML = `<p class="note">${esc(r.error)}</p>`; return; }
+  apsCliente = r.apartados; renderApsCliente();
+}
+async function cargarApartados() {
+  const r = await api('apartados', { pin: PIN });
+  if (!r.ok) { $('s-ap-list').innerHTML = `<p class="note" style="padding:10px 4px">${esc(r.error)}</p>`; $('s-ap-total').textContent = ''; return; }
+  apsAbiertos = r.apartados.sort((a, b) => a.limite.localeCompare(b.limite)); renderApartados();
+}
+function renderApartados() {
+  const total = apsAbiertos.reduce((s, a) => s + a.saldo, 0);
+  $('s-ap-total').textContent = apsAbiertos.length ? `Por cobrar: ${peso.format(total)}` : '';
+  if (!apsAbiertos.length) { $('s-ap-list').innerHTML = '<p class="note" style="padding:10px 4px">No hay apartados pendientes. Para apartar, busca a la clienta y toca «Nuevo apartado».</p>'; return; }
+  $('s-ap-list').innerHTML = apsAbiertos.map(a => `<button type="button" data-id="${esc(a.cliente)}"><span class="n">${esc(a.nombre)} · ${esc(a.prenda)}</span><span class="s">${peso.format(a.saldo)}</span><span class="t"${vencido(a) ? ' style="color:var(--warn);font-weight:600"' : ''}>${esc(limiteTexto(a))}</span></button>`).join('');
+}
+$('s-ap-list').addEventListener('click', (e) => { const b = e.target.closest('button[data-id]'); if (b) buscar(b.dataset.id); });
+function apActualizado(a) {
+  const i = apsCliente.findIndex(x => x.id === a.id); if (i >= 0) apsCliente[i] = a; else apsCliente.push(a);
+  if (actual && actual.id === a.cliente) renderApsCliente();
+  apsAbiertos = apsAbiertos.filter(x => x.id !== a.id); if (a.estado === 'abierto') apsAbiertos.push(a);
+  apsAbiertos.sort((x, y) => x.limite.localeCompare(y.limite)); renderApartados();
+}
+
+// Nuevo apartado
+let apNuevo = null;
+cerrarAlTocarFuera($('d-ap'));
+$('s-ap-nuevo').addEventListener('click', () => {
+  if (!actual) return;
+  apNuevo = codigo('A-');  // un código por apartado: si se reintenta por mala señal no se duplica
+  $('f-ap').reset(); showErr($('a-err'));
+  $('a-cliente').textContent = `Para ${actual.nombre} (${actual.id})`;
+  $('a-regla').textContent = `Se aparta con mínimo el ${CONFIG.APARTADO_PCT}% y hay ${CONFIG.APARTADO_DIAS / 7} semanas para liquidar.`;
+  $('a-prods').innerHTML = productos.filter(p => p.estado !== 'oculto').map(p => `<option value="${esc(p.nombre)}"></option>`).join('');
+  if (!catCargado) api('catalogo', { pin: PIN }).then(r => { if (r.ok) { productos = r.productos; catCargado = true; $('a-prods').innerHTML = productos.map(p => `<option value="${esc(p.nombre)}"></option>`).join(''); } });
+  $('d-ap').showModal();
+});
+// Si eligen una prenda del catálogo se llena el precio; el anticipo sugerido es el % mínimo
+$('a-prenda').addEventListener('change', () => {
+  const p = productos.find(x => x.nombre === $('a-prenda').value);
+  if (p && !$('a-total').value) { $('a-total').value = p.oferta || p.precio; $('a-total').dispatchEvent(new Event('input')); }
+});
+$('a-total').addEventListener('input', () => { const t = Number($('a-total').value); if (t > 0) $('a-anticipo').value = Math.ceil(t * CONFIG.APARTADO_PCT / 100); });
+$('f-ap').addEventListener('submit', async (e) => {
+  e.preventDefault(); showErr($('a-err'));
+  const d = { id: apNuevo, cliente: actual.id, prenda: $('a-prenda').value.trim(), total: Number($('a-total').value), anticipo: Number($('a-anticipo').value) };
+  const v = validarApartado(d); if (v) return showErr($('a-err'), v);
+  if (d.anticipo < Math.ceil(d.total * CONFIG.APARTADO_PCT / 100) && !$('f-ap').dataset.ok) {
+    $('f-ap').dataset.ok = '1';
+    return showErr($('a-err'), `Es menos del ${CONFIG.APARTADO_PCT}% (${peso.format(Math.ceil(d.total * CONFIG.APARTADO_PCT / 100))}). Toca Guardar otra vez si así lo quieres.`);
+  }
+  const b = $('a-guardar'); b.disabled = true; b.textContent = 'Guardando…';
+  const r = await api('nuevoApartado', { pin: PIN, apartado: d });
+  b.disabled = false; b.textContent = 'Guardar apartado'; delete $('f-ap').dataset.ok;
+  if (!r.ok) return showErr($('a-err'), r.error);
+  $('d-ap').close(); apActualizado(r.apartado); toast(`Apartado guardado. Saldo: ${peso.format(r.apartado.saldo)}`);
+});
+
+// Abonar / cancelar
+cerrarAlTocarFuera($('d-abono'));
+let abonoId = null, cancelT;
+$('s-aps').addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-accion]'); if (!b) return;
+  const a = apsCliente.find(x => x.id === b.closest('[data-ap]').dataset.ap); if (!a) return;
+  if (b.dataset.accion === 'abonar') {
+    apAbono = a; abonoId = codigo('B-');
+    $('f-abono').reset(); showErr($('b-err'));
+    $('b-resumen').innerHTML = `<strong>${esc(a.prenda)}</strong><br><span class="muted">${esc(a.nombre)} · saldo ${peso.format(a.saldo)}</span>`;
+    $('b-monto').max = a.saldo; $('d-abono').showModal(); $('b-monto').focus();
+  } else if (b.dataset.accion === 'cancelar') {
+    if (!b.dataset.confirm) { b.dataset.confirm = '1'; b.textContent = '¿Seguro? Toca otra vez'; clearTimeout(cancelT); cancelT = setTimeout(() => { delete b.dataset.confirm; b.textContent = 'Cancelar'; }, 4000); return; }
+    b.disabled = true;
+    const r = await api('cancelarApartado', { pin: PIN, apartado: a.id });
+    if (!r.ok) { b.disabled = false; return toast(r.error); }
+    apActualizado(r.apartado); toast('Apartado cancelado');
+  }
+});
+$('b-todo').addEventListener('click', () => { if (apAbono) $('b-monto').value = apAbono.saldo; });
+$('f-abono').addEventListener('submit', async (e) => {
+  e.preventDefault(); showErr($('b-err'));
+  const m = Math.round(Number($('b-monto').value));
+  if (!(m > 0) || m > apAbono.saldo) return showErr($('b-err'), `Escribe un abono de $1 a ${peso.format(apAbono.saldo)}.`);
+  const b = $('b-guardar'); b.disabled = true; b.textContent = 'Guardando…';
+  const r = await api('abonar', { pin: PIN, apartado: apAbono.id, monto: m, abono: abonoId });
+  b.disabled = false; b.textContent = 'Guardar abono';
+  if (!r.ok) return showErr($('b-err'), r.error);
+  $('d-abono').close(); apActualizado(r.apartado);
+  toast(r.apartado.estado === 'liquidado' ? '¡Apartado liquidado!' : `Abono guardado. Saldo: ${peso.format(r.apartado.saldo)}`);
+  // ofrece mandarle el comprobante de una vez
+  const w = $('s-aps').querySelector(`[data-ap="${r.apartado.id}"] .wa-ap`); if (w) w.focus();
+});
+
+/* ---------- catálogo ---------- */
+let productos = [], catFiltro = 'Todo', catCargado = false, detalle = null, tallaSel = null;
+const esFotoDrive = (f) => !/^(data:|blob:|https?:)/.test(f);
+// Las fotos viven en Google Drive; se piden ya reducidas al tamaño en que se ven
+function fotoURL(f, w) { return esFotoDrive(f) ? `https://lh3.googleusercontent.com/d/${encodeURIComponent(f)}=w${w}` : f; }
+function imgHTML(f, w, alt) { return `<img src="${esc(fotoURL(f, w))}"${esFotoDrive(f) ? ` data-f="${esc(f)}" data-w="${w}"` : ''} alt="${esc(alt)}" loading="lazy" decoding="async">`; }
+// Si la dirección rápida de Google falla, se usa la de miniaturas de Drive
+document.addEventListener('error', (e) => {
+  const img = e.target; if (img.tagName !== 'IMG' || !img.dataset.f || img.dataset.alt) return;
+  img.dataset.alt = '1'; img.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(img.dataset.f)}&sz=w${img.dataset.w}`;
+}, true);
+const precioHTML = (p) => p.oferta ? `${peso.format(p.oferta)}<s>${peso.format(p.precio)}</s>` : peso.format(p.precio);
+const orden = { disponible: 0, oculto: 1, agotado: 2 };
+const ordenar = (xs) => xs.sort((a, b) => (orden[a.estado] - orden[b.estado]) || String(b.alta).localeCompare(String(a.alta)));
+
+function initCatalogo() {
+  if (!catCargado && !productos.length) { try { const c = JSON.parse(store.get('jireh_catalogo_copia')); if (Array.isArray(c)) productos = c; } catch {} }
+  renderCatalogo();
+  recuperarPin().then(() => cargarCatalogo());
+}
+async function cargarCatalogo() {
+  if (!productos.length) $('k-estado').textContent = 'Cargando catálogo…';
+  const r = await api('catalogo', PIN ? { pin: PIN } : {});
+  if (r.ok) {
+    if (PIN && !r.duena) salirDuena();  // cambiaron el PIN
+    productos = r.productos; catCargado = true;
+    if (!r.duena) store.set('jireh_catalogo_copia', JSON.stringify(productos));
+  } else if (!productos.length) { $('k-estado').textContent = r.red ? 'Sin conexión. Revisa tu internet y vuelve a abrir el catálogo.' : r.error; return; }
+  renderCatalogo(); abrirPendiente();
+}
+function abrirPendiente() {
+  if (!catPendiente) return;
+  const p = productos.find(x => x.id === catPendiente); catPendiente = null;
+  if (p) abrirDetalle(p);
+}
+function cardHTML(p) {
+  const badge = p.estado === 'oculto' ? '<span class="badge">Oculto</span>' : p.estado === 'agotado' ? '<span class="badge">Agotado</span>'
+    : p.oferta ? `<span class="badge sale">-${Math.round(100 - 100 * p.oferta / p.precio)}%</span>` : '';
+  return `<button type="button" class="prod${p.estado !== 'disponible' ? ' off' : ''}" data-id="${esc(p.id)}"><span class="ph">${p.fotos[0] ? imgHTML(p.fotos[0], 500, p.nombre) : ''}${badge}</span><span class="n">${esc(p.nombre)}</span><span class="price">${precioHTML(p)}</span></button>`;
+}
+function renderCatalogo() {
+  const duena = !!PIN;
+  $('k-admin').hidden = !duena; $('k-salir').hidden = !duena; $('k-duena').hidden = duena; if (duena) $('k-pin').hidden = true;
+  ordenar(productos);
+  const cats = ['Todo', ...new Set(productos.map(p => p.categoria).filter(Boolean))];
+  if (!cats.includes(catFiltro)) catFiltro = 'Todo';
+  $('k-cats').hidden = cats.length < 3;
+  $('k-cats').innerHTML = cats.map(c => `<button type="button" aria-pressed="${c === catFiltro}" data-cat="${esc(c)}">${esc(c)}</button>`).join('');
+  const xs = productos.filter(p => catFiltro === 'Todo' || p.categoria === catFiltro);
+  $('k-grid').innerHTML = xs.map(cardHTML).join('');
+  $('k-estado').textContent = xs.length ? '' : productos.length ? 'No hay productos en esta categoría.'
+    : duena ? 'Todavía no hay productos. Toca «Agregar producto» para subir el primero.' : catCargado ? 'Muy pronto verás aquí nuestras prendas.' : 'Cargando catálogo…';
+}
+$('k-cats').addEventListener('click', (e) => { const b = e.target.closest('button[data-cat]'); if (b) { catFiltro = b.dataset.cat; renderCatalogo(); } });
+$('k-grid').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-id]'); if (!b) return;
+  const p = productos.find(x => x.id === b.dataset.id); if (p) PIN ? abrirEditor(p) : abrirDetalle(p);
+});
+$('k-tarjeta').addEventListener('click', () => { location.hash = ''; });
+$('k-duena').addEventListener('click', () => { $('k-pin').hidden = false; $('k-duena').hidden = true; $('k-pin-in').focus(); });
+$('k-pin').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const b = $('k-pin-btn'); if (b.disabled) return; b.disabled = true;
+  const r = await validarPin($('k-pin-in').value.trim());
+  b.disabled = false;
+  if (!r.ok) return showErr($('k-pin-err'), r.error || 'PIN incorrecto.');
+  $('k-pin-in').value = ''; showErr($('k-pin-err')); renderCatalogo(); cargarCatalogo(); toast('Modo dueña: ya puedes agregar productos');
+});
+$('k-salir').addEventListener('click', () => { salirDuena(); renderCatalogo(); cargarCatalogo(); });
+
+// Detalle de prenda
+cerrarAlTocarFuera($('d-prod'));
+function abrirDetalle(p) {
+  detalle = p; tallaSel = p.tallas.length === 1 ? p.tallas[0] : null;
+  $('d-cat').textContent = p.categoria || 'Jireh shop';
+  $('d-carr').innerHTML = p.fotos.length ? p.fotos.map((f, i) => imgHTML(f, 1000, `${p.nombre}, foto ${i + 1}`)).join('') : '<div></div>';
+  $('d-carr-n').hidden = p.fotos.length < 2; $('d-carr-n').textContent = `Foto 1 de ${p.fotos.length} · desliza para ver más`;
+  $('d-nombre').textContent = p.nombre; $('d-precio').innerHTML = precioHTML(p);
+  $('d-desc').textContent = p.descripcion || ''; $('d-desc').hidden = !p.descripcion;
+  $('d-tallas-box').hidden = !p.tallas.length; renderTallasDetalle();
+  $('d-agotado').hidden = p.estado !== 'agotado';
+  $('d-wa').textContent = p.estado === 'agotado' ? 'Preguntar por WhatsApp' : 'Lo quiero, pedir por WhatsApp';
+  $('d-editar').hidden = !PIN;
+  actualizarWA();
+  $('d-prod').showModal(); $('d-carr').scrollLeft = 0;
+}
+function renderTallasDetalle() {
+  $('d-tallas').innerHTML = detalle.tallas.map(t => `<button type="button" aria-pressed="${t === tallaSel}">${esc(t)}</button>`).join('');
+}
+function actualizarWA() {
+  const p = detalle;
+  let m = `Hola, vi esta prenda en el catálogo de Jireh shop:\n*${p.nombre}* · ${peso.format(p.oferta || p.precio)}`;
+  if (p.estado === 'agotado') m += '\n¿La van a volver a tener?';
+  else if (tallaSel) m += `\nLa quiero en talla *${tallaSel}*.`;
+  else if (p.tallas.length) m += `\n¿Qué tallas tienen disponibles?`;
+  m += `\n${enlaceProd(p.id)}`;
+  $('d-wa').href = waLink(CONFIG.WHATSAPP, m);
+}
+$('d-tallas').addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  tallaSel = tallaSel === b.textContent ? null : b.textContent; renderTallasDetalle(); actualizarWA();
+});
+$('d-carr').addEventListener('scroll', () => {
+  const c = $('d-carr'); const i = Math.round(c.scrollLeft / c.clientWidth) + 1;
+  $('d-carr-n').textContent = `Foto ${i} de ${detalle.fotos.length}`;
+}, { passive: true });
+$('d-share').addEventListener('click', async () => {
+  const url = enlaceProd(detalle.id);
+  if (navigator.share) { try { await navigator.share({ title: detalle.nombre, text: `${detalle.nombre} en Jireh shop`, url }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  try { await navigator.clipboard.writeText(url); toast('Enlace copiado'); } catch { toast(url, 8000); }
+});
+$('d-editar').addEventListener('click', () => { $('d-prod').close(); abrirEditor(detalle); });
+
+// Editor de prenda (dueña)
+let edit = null, edFotos = [], edTallas = [], borrarT;
+function abrirEditor(p) {
+  edit = p ? { ...p } : { id: codigo('P-'), nuevo: true, nombre: '', categoria: '', precio: '', oferta: '', tallas: [], fotos: [], descripcion: '', estado: 'disponible' };
+  edFotos = edit.fotos.map(f => ({ f, src: fotoURL(f, 400) }));
+  edTallas = [...edit.tallas];
+  $('e-titulo').textContent = p ? 'Editar producto' : 'Agregar producto';
+  $('e-nombre').value = edit.nombre; $('e-cat').value = edit.categoria; $('e-precio').value = edit.precio; $('e-oferta').value = edit.oferta || '';
+  $('e-desc').value = edit.descripcion || ''; $('e-estado').value = edit.estado; $('e-talla-otra').value = '';
+  $('e-cats').innerHTML = [...new Set([...CONFIG.CATEGORIAS, ...productos.map(x => x.categoria).filter(Boolean)])].map(c => `<option value="${esc(c)}"></option>`).join('');
+  $('e-borrar').hidden = !p; resetBorrar(); showErr($('e-err'));
+  renderTallasEd(); renderFotosEd();
+  $('d-edit').showModal();
+}
+function renderTallasEd() {
+  const todas = [...CONFIG.TALLAS, ...edTallas.filter(t => !CONFIG.TALLAS.includes(t))];
+  $('e-tallas').innerHTML = todas.map(t => `<button type="button" aria-pressed="${edTallas.includes(t)}">${esc(t)}</button>`).join('');
+}
+$('e-tallas').addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return; const t = b.textContent;
+  edTallas = edTallas.includes(t) ? edTallas.filter(x => x !== t) : [...edTallas, t]; renderTallasEd();
+});
+$('e-talla-add').addEventListener('click', () => {
+  const t = $('e-talla-otra').value.trim().toUpperCase().slice(0, 12);
+  if (t && !edTallas.includes(t)) edTallas.push(t);
+  $('e-talla-otra').value = ''; renderTallasEd();
+});
+$('e-talla-otra').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('e-talla-add').click(); } });
+function renderFotosEd() {
+  $('e-fotos').innerHTML = edFotos.map((x, i) => `<div class="fe${x.f ? '' : ' cargando'}"><img src="${esc(x.src)}" alt="Foto ${i + 1}">${i === 0 ? '<span class="badge">Portada</span>' : `<button type="button" class="fe-1" data-i="${i}">Hacer portada</button>`}${x.f ? '' : '<span class="fe-st">Subiendo…</span>'}<button type="button" class="fe-x" data-i="${i}" aria-label="Quitar foto ${i + 1}">×</button></div>`).join('')
+    + (edFotos.length < CONFIG.MAX_FOTOS ? '<label class="fe add">+ Agregar foto<input type="file" accept="image/*" multiple id="e-file" hidden></label>' : '');
+}
+$('e-fotos').addEventListener('click', (e) => {
+  const x = e.target.closest('.fe-x'), uno = e.target.closest('.fe-1');
+  if (x) { edFotos.splice(Number(x.dataset.i), 1); renderFotosEd(); }
+  if (uno) { const [f] = edFotos.splice(Number(uno.dataset.i), 1); edFotos.unshift(f); renderFotosEd(); }
+});
+$('e-fotos').addEventListener('change', (e) => { if (e.target.id === 'e-file') agregarFotos(e.target.files); });
+// Reduce la foto en el celular antes de subirla: de 4 MB a unos 200 KB, carga rápido con datos móviles
+async function comprimir(file, max = DEMO ? 800 : 1400, q = 0.82) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = url; });
+    const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+    const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+    return c.toDataURL('image/jpeg', q);
+  } finally { URL.revokeObjectURL(url); }
+}
+async function agregarFotos(files) {
+  for (const file of [...files].slice(0, CONFIG.MAX_FOTOS - edFotos.length)) {
+    let src;
+    try { src = await comprimir(file); } catch { showErr($('e-err'), 'No se pudo leer una de las fotos. Prueba con otra.'); continue; }
+    const x = { f: null, src }; edFotos.push(x); renderFotosEd();
+    api('subirFoto', { pin: PIN, foto: src }).then(r => {
+      if (!edFotos.includes(x)) return;
+      // el error se muestra dentro de la ventana: un aviso flotante quedaría escondido detrás de ella
+      if (r.ok) x.f = r.foto; else { edFotos = edFotos.filter(y => y !== x); showErr($('e-err'), 'No se pudo subir la foto. ' + (r.error || '')); }
+      renderFotosEd();
+    });
+  }
+}
+function resetBorrar() { clearTimeout(borrarT); const b = $('e-borrar'); delete b.dataset.confirm; b.textContent = 'Borrar producto'; b.disabled = false; }
+$('f-edit').addEventListener('submit', async (e) => {
+  e.preventDefault(); showErr($('e-err'));
+  if (edFotos.some(x => !x.f)) return showErr($('e-err'), 'Espera a que terminen de subir las fotos.');
+  const d = {
+    id: edit.id, nombre: $('e-nombre').value.replace(/\s+/g, ' ').trim(), categoria: $('e-cat').value.trim(),
+    precio: Math.round(Number($('e-precio').value)), oferta: Math.round(Number($('e-oferta').value)) || '',
+    tallas: edTallas, fotos: edFotos.map(x => x.f), descripcion: $('e-desc').value.trim(), estado: $('e-estado').value,
+  };
+  if (!d.nombre) return showErr($('e-err'), 'Escribe el nombre de la prenda.');
+  if (!(d.precio > 0)) return showErr($('e-err'), 'Escribe el precio.');
+  if (d.oferta && d.oferta >= d.precio) return showErr($('e-err'), 'El precio de oferta debe ser menor que el precio normal.');
+  const b = $('e-guardar'); b.disabled = true; b.textContent = 'Guardando…';
+  const r = await api('guardarProducto', { pin: PIN, producto: d });
+  b.disabled = false; b.textContent = 'Guardar';
+  if (!r.ok) return showErr($('e-err'), r.error);
+  const i = productos.findIndex(x => x.id === r.producto.id);
+  if (i >= 0) productos[i] = r.producto; else productos.push(r.producto);
+  $('d-edit').close(); renderCatalogo(); toast(edit.nuevo ? 'Producto agregado al catálogo' : 'Cambios guardados');
+});
+$('e-borrar').addEventListener('click', async () => {
+  const b = $('e-borrar');
+  if (!b.dataset.confirm) { b.dataset.confirm = '1'; b.textContent = '¿Seguro? Toca otra vez para borrar'; borrarT = setTimeout(resetBorrar, 4000); return; }
+  b.disabled = true;
+  const r = await api('borrarProducto', { pin: PIN, id: edit.id });
+  resetBorrar();
+  if (!r.ok) return showErr($('e-err'), r.error);
+  productos = productos.filter(x => x.id !== edit.id); $('d-edit').close(); renderCatalogo(); toast('Producto borrado');
+});
+$('k-nuevo').addEventListener('click', () => abrirEditor(null));
+// La dueña comparte el catálogo completo (en WhatsApp sale con su portada)
+$('k-share-cat').addEventListener('click', async () => {
+  const texto = '¡Mira el catálogo de Jireh shop! Elige tu prenda y pídela por WhatsApp:';
+  if (navigator.share) { try { await navigator.share({ title: 'Catálogo Jireh shop', text: texto, url: CAT_URL }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  window.open(waLink('', texto + ' ' + CAT_URL), '_blank', 'noopener');
+});
+
+/* ---------- cartel ---------- */
+function renderCartel() {
+  qr($('p-qr'), APP_URL, 220);
+  $('p-regla').textContent = `${CONFIG.REGLA}. Con ${CONFIG.META} sellos: ${CONFIG.PREMIO}.`;
+  $('p-url').textContent = APP_URL;
+}
+$('p-print').addEventListener('click', () => window.print());
+
+/* ---------- tamaño del texto ---------- */
+// Agranda toda la página (letra, botones y tarjeta) como el zoom del navegador; se recuerda en ese celular
+const TAMANOS = [[1, 'Normal'], [1.2, 'Grande'], [1.4, 'Muy grande']];
+let tam = Math.max(0, TAMANOS.findIndex(t => String(t[0]) === store.get('jireh_tam')));
+function aplicarTam() {
+  const [z, n] = TAMANOS[tam];
+  document.body.style.zoom = z === 1 ? '' : z;
+  $('tam-n').textContent = n;
+  $('tam').setAttribute('aria-label', `Tamaño del texto: ${n}. Toca para cambiarlo`);
+}
+$('tam').addEventListener('click', () => { tam = (tam + 1) % TAMANOS.length; store.set('jireh_tam', String(TAMANOS[tam][0])); aplicarTam(); });
+aplicarTam();
+
+/* ---------- arranque ---------- */
+$('demoBar').hidden = !DEMO;
+setView(vistaDeHash());
+// Guarda la página en el celular: la próxima vez abre aunque la conexión falle
+
+</script>
+
+</body>
+</html>
